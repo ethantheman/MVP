@@ -27,9 +27,16 @@ app.get('/', (req, res) => {
 });
 
 app.post('/cards', (req, res) => {
-  console.log('post to /cards...');
   console.log('request: ', req.body);
-  res.redirect('/');
+  let c = new Card({question: req.body.question, answer: req.body.answer});
+  c.save((err, result) => {
+    if ( err ) {
+      console.error('database error: ', err);
+    } else {
+      console.log('card was saved!');
+    }
+  });
+  res.status(201).send(JSON.stringify(c));
 });
  
 const server = app.listen(3000, function() {

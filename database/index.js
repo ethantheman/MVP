@@ -8,19 +8,11 @@ db.once("open", () => {
 });
 
 let cardSchema = mongoose.Schema({
-  question: String,
+  question: {type: String, unique: true},
   answer: String
 });
 
 let Card = mongoose.model("Card", cardSchema);
-
-// var test = new Card({question:'what color is the sky?', answer:'blue'});
-
-// test.save((err, card) => {
-// 	if ( !err ) {
-// 		console.log('card is now saved.');
-// 	}
-// });
 
 module.exports.db = db;
 module.exports.Card = Card;

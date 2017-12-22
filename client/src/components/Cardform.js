@@ -1,7 +1,7 @@
 import React from 'react';
 import $ from 'jquery';
 
-class Form extends React.Component {
+class Cardform extends React.Component {
 	constructor(props){
 		super(props);
 		this.state = {
@@ -13,6 +13,39 @@ class Form extends React.Component {
 		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 
+	handleSubmit(event){
+    console.log('submitting form!');
+    event.preventDefault();
+    let data = {
+      question: this.state.question,
+      answer: this.state.answer
+    }
+
+    let sendCardToParent = this.props.getNewCard;
+
+    $.ajax({
+      type: "POST",
+      url: "http://localhost:3000/cards",
+      data: JSON.stringify(data),
+      success: function(data){
+        console.log('success: ', JSON.parse(data));
+        // send the card to the parent component where
+        // it will update the state of cards collection
+        sendCardToParent(JSON.parse(data));
+      },
+      failure: function(err) {
+        console.log('error :( ', err);
+      },
+      contentType : "application/json"
+    });
+
+
+    this.setState({
+      question: 'enter a question',
+      answer: 'enter an answer'
+    });
+  }
+
 	ChangeQ(event) {
 		this.setState({
 			question: event.target.value
@@ -22,35 +55,6 @@ class Form extends React.Component {
 	ChangeA(event) {
 		this.setState({
 			answer: event.target.value
-		});
-	}
-
-	handleSubmit(event){
-		console.log('submitting form!');
-		event.preventDefault();
-		let data = {
-			question: this.state.question,
-			answer: this.state.answer
-		}
-
-		$.ajax({
-      type: "POST",
-      url: "http://localhost:3000/cards",
-      data: JSON.stringify(data),
-      success: function(){
-        console.log('success');
-      },
-      error: function(err) {
-      	console.log('error :( ', err);
-      },
-      dataType: "json",
-      contentType : "application/json"
-    })
-
-
-		this.setState({
-			question: 'enter a question',
-			answer: 'enter an answer'
 		});
 	}
 
@@ -67,4 +71,4 @@ class Form extends React.Component {
 	}
 }
 
-export default Form;
+export default Cardform;
