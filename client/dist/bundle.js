@@ -507,7 +507,7 @@ var App = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
     _this.state = {
-      cards: [{ 'question': 'what color is the sky?', 'answer': 'blue' }, { 'question': 'what is the moon made of?', 'answer': 'cheese' }, { 'question': 'what is the largest planet in the solar system?', 'answer': 'Jupiter' }],
+      cards: [{ question: "what color is the sky?", answer: "blue" }],
       currentCard: null
     };
     _this.getNewCard = _this.getNewCard.bind(_this);
@@ -517,10 +517,15 @@ var App = function (_React$Component) {
   _createClass(App, [{
     key: "getNewCard",
     value: function getNewCard(c) {
-      console.log('card made it back to parent: ', c);
       var newCards = this.state.cards;
       newCards.push(c);
       this.setState({ cards: newCards });
+    }
+  }, {
+    key: "changeCard",
+    value: function changeCard(e) {
+      console.log('hi!!');
+      // this.setState({currentCard: card});
     }
   }, {
     key: "componentWillMount",
@@ -539,7 +544,7 @@ var App = function (_React$Component) {
           "Flashify"
         ),
         _react2.default.createElement(_Cardform2.default, { getNewCard: this.getNewCard }),
-        _react2.default.createElement(_CardList2.default, { cards: this.state.cards }),
+        _react2.default.createElement(_CardList2.default, { cards: this.state.cards, changeCard: this.changeCard }),
         _react2.default.createElement(_CardView2.default, { card: this.state.currentCard })
       );
     }
@@ -28244,6 +28249,7 @@ var _CardListEntry2 = _interopRequireDefault(_CardListEntry);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var CardList = function CardList(props) {
+	console.log(props.changeCard);
 	return _react2.default.createElement(
 		"div",
 		null,
@@ -28253,7 +28259,7 @@ var CardList = function CardList(props) {
 			"Card List"
 		),
 		props.cards.map(function (card, i) {
-			return _react2.default.createElement(_CardListEntry2.default, { key: i, card: card });
+			return _react2.default.createElement(_CardListEntry2.default, { key: i, card: card, onClick: props.changeCard });
 		})
 	);
 };
@@ -28380,7 +28386,7 @@ var CardListEntry = function CardListEntry(props) {
 
 	return _react2.default.createElement(
 		"div",
-		null,
+		{ onClick: props.onClick },
 		_react2.default.createElement(
 			"h4",
 			null,

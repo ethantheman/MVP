@@ -8,17 +8,21 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      cards: [{'question': 'what color is the sky?', 'answer':'blue'},{'question': 'what is the moon made of?', 'answer':'cheese'},{'question': 'what is the largest planet in the solar system?', 'answer':'Jupiter'}],
+      cards: [{question: "what color is the sky?", answer: "blue"}],
       currentCard: null
     };
     this.getNewCard = this.getNewCard.bind(this);
   }
 
   getNewCard(c) {
-    console.log('card made it back to parent: ', c);
     let newCards = this.state.cards;
     newCards.push(c);
     this.setState({cards: newCards});
+  }
+
+  changeCard(e) {
+    console.log('hi!!');
+    // this.setState({currentCard: card});
   }
 
   componentWillMount() {
@@ -30,7 +34,7 @@ class App extends React.Component {
       <div>
         <h1>Flashify</h1>
         <Cardform getNewCard={this.getNewCard} />
-        <CardList cards={this.state.cards}/>
+        <CardList cards={this.state.cards} changeCard={this.changeCard}/>
         <CardView card={this.state.currentCard} />
       </div>
     );

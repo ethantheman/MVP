@@ -2,10 +2,11 @@ import React from "react";
 import CardListEntry from './CardListEntry.js';
 
 const CardList = (props) => {
+	console.log(props.changeCard);
 	return (
 			<div>
 				<h2>Card List</h2>
-				{props.cards.map((card, i) => <CardListEntry key={i} card={card}/>)}
+				{props.cards.map((card, i) => <CardListEntry key={i} card={card} onClick={props.changeCard}/>)}
 			</div>
 			);
 	}
