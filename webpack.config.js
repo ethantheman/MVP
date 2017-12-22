@@ -1,14 +1,15 @@
-const path = require('path');
+var path = require('path');
+var SRC_DIR = path.join(__dirname, '/client/src');
+var DIST_DIR = path.join(__dirname, '/client/dist');
  
 module.exports = {
   context: path.join(__dirname, 'src'),
-  entry: [
-    './main.js',
-  ],
+  entry: `${SRC_DIR}/index.js`,
   output: {
-    path: path.join(__dirname, 'www'),
+    path: DIST_DIR,
     filename: 'bundle.js',
   },
+  watch: true,
   module: {
     rules: [
       {
