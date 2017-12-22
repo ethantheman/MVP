@@ -12,6 +12,7 @@ class App extends React.Component {
       currentCard: null
     };
     this.getNewCard = this.getNewCard.bind(this);
+    this.changeCard = this.changeCard.bind(this);
   }
 
   getNewCard(c) {
@@ -20,9 +21,9 @@ class App extends React.Component {
     this.setState({cards: newCards});
   }
 
-  changeCard(e) {
-    console.log('hi!!');
-    // this.setState({currentCard: card});
+  changeCard(newCard) {
+    console.log('card: ', newCard);
+    this.setState({currentCard: newCard});
   }
 
   componentWillMount() {

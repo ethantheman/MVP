@@ -2,7 +2,6 @@ import React from "react";
 import CardListEntry from './CardListEntry.js';
 
 const CardList = (props) => {
-	console.log(props.changeCard);
 	return (
 			<div>
 				<h2>Card List</h2>

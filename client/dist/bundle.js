@@ -511,6 +511,7 @@ var App = function (_React$Component) {
       currentCard: null
     };
     _this.getNewCard = _this.getNewCard.bind(_this);
+    _this.changeCard = _this.changeCard.bind(_this);
     return _this;
   }
 
@@ -523,9 +524,9 @@ var App = function (_React$Component) {
     }
   }, {
     key: "changeCard",
-    value: function changeCard(e) {
-      console.log('hi!!');
-      // this.setState({currentCard: card});
+    value: function changeCard(newCard) {
+      console.log('card: ', newCard);
+      this.setState({ currentCard: newCard });
     }
   }, {
     key: "componentWillMount",
@@ -28249,7 +28250,6 @@ var _CardListEntry2 = _interopRequireDefault(_CardListEntry);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var CardList = function CardList(props) {
-	console.log(props.changeCard);
 	return _react2.default.createElement(
 		"div",
 		null,
@@ -28383,10 +28383,9 @@ var _react2 = _interopRequireDefault(_react);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var CardListEntry = function CardListEntry(props) {
-
 	return _react2.default.createElement(
 		"div",
-		{ onClick: props.onClick },
+		{ onClick: props.onClick.bind(undefined, props.card) },
 		_react2.default.createElement(
 			"h4",
 			null,
