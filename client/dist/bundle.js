@@ -11250,6 +11250,7 @@ var App = function (_React$Component) {
     _this.getNewCard = _this.getNewCard.bind(_this);
     _this.changeCard = _this.changeCard.bind(_this);
     _this.toggle = _this.toggle.bind(_this);
+    _this.deleteCard = _this.deleteCard.bind(_this);
     return _this;
   }
 
@@ -11276,6 +11277,39 @@ var App = function (_React$Component) {
       } else if (this.state.status === 'a') {
         this.setState({ status: 'q' });
       }
+    }
+  }, {
+    key: "deleteCard",
+    value: function deleteCard(card) {
+      console.log(card);
+      var that = this;
+      _jquery2.default.ajax({
+        type: "POST",
+        url: "http://localhost:3000/",
+        data: JSON.stringify(card),
+        success: function success(data) {
+          var newCards = that.state.cards;
+          console.log(newCards);
+          for (var i = 0; i < newCards.length; i++) {
+            if (newCards[i].question === card.question) {
+              // remove the card from the array
+              newCards = newCards.slice(0, i).concat(newCards.slice(i + 1, newCards.length));
+              break;
+            }
+          }
+          console.log('empty newCards: ', newCards);
+          that.setState({
+            cards: newCards,
+            currentCard: {},
+            status: 'init'
+          });
+        },
+        failure: function failure(err) {
+          console.log('error :( ', err);
+        },
+        dataType: 'json',
+        contentType: "application/json"
+      });
     }
   }, {
     key: "componentWillMount",
@@ -11306,7 +11340,7 @@ var App = function (_React$Component) {
           "Flashify"
         ),
         _react2.default.createElement(_Cardform2.default, { getNewCard: this.getNewCard }),
-        _react2.default.createElement(_CardList2.default, { cards: this.state.cards, changeCard: this.changeCard }),
+        _react2.default.createElement(_CardList2.default, { cards: this.state.cards, changeCard: this.changeCard, deleteCard: this.deleteCard }),
         _react2.default.createElement(_CardView2.default, { card: this.state.currentCard, status: this.state.status, onClick: this.toggle })
       );
     }
@@ -28718,7 +28752,7 @@ var CardList = function CardList(props) {
 			"Card List"
 		),
 		props.cards.map(function (card, i) {
-			return _react2.default.createElement(_CardListEntry2.default, { key: i, card: card, onClick: props.changeCard });
+			return _react2.default.createElement(_CardListEntry2.default, { key: i, card: card, onClick: props.changeCard, deleteCard: props.deleteCard });
 		})
 	);
 };
@@ -28750,6 +28784,11 @@ var CardListEntry = function CardListEntry(props) {
 			"h4",
 			null,
 			props.card.question
+		),
+		_react2.default.createElement(
+			"button",
+			{ onClick: props.deleteCard.bind(undefined, props.card) },
+			"delete me"
 		)
 	);
 };

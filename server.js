@@ -25,6 +25,19 @@ app.get('/', (req, res) => {
   res.send('index.js');
 });
 
+app.post('/', (req, res) => {
+  console.log('POST TO HOME');
+  console.log('req: ', req.body);
+  Card.remove({"_id": req.body._id}, (err, result) => {
+    if ( err ) {
+      console.error(err);
+    } else {
+      console.log('successfully deleted document.')
+    }
+    res.send(result);
+  });
+});
+
 app.post('/cards', (req, res) => {
   console.log('request: ', req.body);
   let c = new Card({question: req.body.question, answer: req.body.answer});

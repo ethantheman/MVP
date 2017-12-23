@@ -16,6 +16,7 @@ class App extends React.Component {
     this.getNewCard = this.getNewCard.bind(this);
     this.changeCard = this.changeCard.bind(this);
     this.toggle = this.toggle.bind(this);
+    this.deleteCard = this.deleteCard.bind(this);
   }
 
   getNewCard(c) {
@@ -39,6 +40,39 @@ class App extends React.Component {
     }
   }
 
+  deleteCard(card) {
+    console.log(card);
+    let that = this;
+    $.ajax({
+      type: "POST",
+      url: "http://localhost:3000/",
+      data: JSON.stringify(card),
+      success: function(data){
+        let newCards = that.state.cards;
+        console.log(newCards);
+        for ( var i = 0; i < newCards.length; i++ ) {
+          if ( newCards[i].question === card.question ) {
+            // remove the card from the array
+            newCards = newCards.slice(0, i).concat(newCards.slice(i+1, newCards.length));
+            break;
+          }
+        }
+        console.log('empty newCards: ', newCards);
+        that.setState({
+          cards: newCards,
+          currentCard: {},
+          status: 'init'
+        })
+
+      },
+      failure: function(err) {
+        console.log('error :( ', err);
+      },
+      dataType: 'json',
+      contentType : "application/json"
+    });
+  }
+
   componentWillMount() {
     var that = this;
     $.ajax({
@@ -60,7 +94,7 @@ class App extends React.Component {
       <div>
         <h1>Flashify</h1>
         <Cardform getNewCard={this.getNewCard} />
-        <CardList cards={this.state.cards} changeCard={this.changeCard}/>
+        <CardList cards={this.state.cards} changeCard={this.changeCard} deleteCard={this.deleteCard}/>
         <CardView card={this.state.currentCard} status={this.state.status} onClick={this.toggle}/>
       </div>
     );

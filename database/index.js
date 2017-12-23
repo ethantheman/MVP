@@ -8,7 +8,7 @@ db.once("open", () => {
 });
 
 let cardSchema = mongoose.Schema({
-  question: {type: String, unique: true},
+  question: String,
   answer: String
 });
 
