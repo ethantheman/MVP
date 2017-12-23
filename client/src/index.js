@@ -11,7 +11,7 @@ class App extends React.Component {
     this.state = {
       cards: [],
       currentCard: {},
-      status: 'init'
+      status: 'init' // status determines what is displayed on the card
     };
     this.getNewCard = this.getNewCard.bind(this);
     this.changeCard = this.changeCard.bind(this);
@@ -30,9 +30,8 @@ class App extends React.Component {
   }
 
   toggle(e) {
-    // toggle question or answer on click of CardView
+    // display question or answer when CardView gets clicked
     e.preventDefault();
-    // status determines whether question or answer is displayed on cardview.
     if ( this.state.status === 'q' ) {
       this.setState({status: 'a'});
     } else if ( this.state.status === 'a' ) {
@@ -62,7 +61,7 @@ class App extends React.Component {
           cards: newCards,
           currentCard: {},
           status: 'init'
-        })
+        });
 
       },
       failure: function(err) {
@@ -90,12 +89,27 @@ class App extends React.Component {
   }
 
   render() {
+    const title = {
+      "textAlign": "center",
+      "fontWeight": "bold"
+    }
+
     return (
       <div>
-        <h1>Flashify</h1>
-        <Cardform getNewCard={this.getNewCard} />
-        <CardList cards={this.state.cards} changeCard={this.changeCard} deleteCard={this.deleteCard}/>
-        <CardView card={this.state.currentCard} status={this.state.status} onClick={this.toggle}/>
+        <div style={{"textAlign": "center"}}>
+          <p className="display-4" style={title}>Flashify</p>
+          <div style={{"display": "inline-block"}}>
+            <Cardform getNewCard={this.getNewCard} />
+          </div>
+        </div>
+        <div>
+          <div style={{"width": "50%", "float":"left"}}>
+            <CardList cards={this.state.cards} changeCard={this.changeCard} deleteCard={this.deleteCard}/>
+          </div>
+          <div style={{"width": "50%", "float":"right"}}>
+            <CardView card={this.state.currentCard} status={this.state.status} onClick={this.toggle}/>
+          </div>
+        </div>
       </div>
     );
   }

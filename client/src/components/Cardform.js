@@ -5,8 +5,8 @@ class Cardform extends React.Component {
 	constructor(props){
 		super(props);
 		this.state = {
-			question: 'enter a question',
-			answer: 'enter an answer'
+			question: '',
+			answer: ''
 		}
 		this.ChangeQ = this.ChangeQ.bind(this);
 		this.ChangeA = this.ChangeA.bind(this);
@@ -14,13 +14,12 @@ class Cardform extends React.Component {
 	}
 
 	handleSubmit(event){
-    console.log('submitting form!');
     event.preventDefault();
     let data = {
       question: this.state.question,
       answer: this.state.answer
     }
-
+    // getNewCard is passed from parent via props
     let sendCardToParent = this.props.getNewCard;
 
     $.ajax({
@@ -28,7 +27,6 @@ class Cardform extends React.Component {
       url: "http://localhost:3000/cards",
       data: JSON.stringify(data),
       success: function(data){
-        console.log('success: ', JSON.parse(data));
         // send the card to the parent component where
         // it will update the state of cards collection
         sendCardToParent(JSON.parse(data));
@@ -41,8 +39,8 @@ class Cardform extends React.Component {
 
 
     this.setState({
-      question: 'enter a question',
-      answer: 'enter an answer'
+      question: '',
+      answer: ''
     });
   }
 
@@ -60,11 +58,11 @@ class Cardform extends React.Component {
 
 	render(){
 		return (
-			<div>
-	      <form onSubmit={this.handleSubmit}>
-	        <input type="text" id="question" value={this.state.question} onChange={this.ChangeQ}/>
-	        <input type="text" id="answer" value={this.state.answer} onChange={this.ChangeA}/>
-	        <input type="submit"/>
+			<div className="form-group">
+	      <form onSubmit={this.handleSubmit} className="form-inline">
+	        <input type="text" className="form-control" placeholder="enter a question" value={this.state.question} onChange={this.ChangeQ}/>
+	        <input type="text" className="form-control" placeholder="enter an answer" value={this.state.answer}  onChange={this.ChangeA}/>
+	        <input type="submit" className="btn btn-primary btn-md"/>
 	      </form>
 	     </div>
 			);

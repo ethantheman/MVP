@@ -11245,7 +11245,7 @@ var App = function (_React$Component) {
     _this.state = {
       cards: [],
       currentCard: {},
-      status: 'init'
+      status: 'init' // status determines what is displayed on the card
     };
     _this.getNewCard = _this.getNewCard.bind(_this);
     _this.changeCard = _this.changeCard.bind(_this);
@@ -11269,9 +11269,8 @@ var App = function (_React$Component) {
   }, {
     key: "toggle",
     value: function toggle(e) {
-      // toggle question or answer on click of CardView
+      // display question or answer when CardView gets clicked
       e.preventDefault();
-      // status determines whether question or answer is displayed on cardview.
       if (this.state.status === 'q') {
         this.setState({ status: 'a' });
       } else if (this.state.status === 'a') {
@@ -11331,17 +11330,42 @@ var App = function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
+      var title = {
+        "textAlign": "center",
+        "fontWeight": "bold"
+      };
+
       return _react2.default.createElement(
         "div",
         null,
         _react2.default.createElement(
-          "h1",
-          null,
-          "Flashify"
+          "div",
+          { style: { "textAlign": "center" } },
+          _react2.default.createElement(
+            "p",
+            { className: "display-4", style: title },
+            "Flashify"
+          ),
+          _react2.default.createElement(
+            "div",
+            { style: { "display": "inline-block" } },
+            _react2.default.createElement(_Cardform2.default, { getNewCard: this.getNewCard })
+          )
         ),
-        _react2.default.createElement(_Cardform2.default, { getNewCard: this.getNewCard }),
-        _react2.default.createElement(_CardList2.default, { cards: this.state.cards, changeCard: this.changeCard, deleteCard: this.deleteCard }),
-        _react2.default.createElement(_CardView2.default, { card: this.state.currentCard, status: this.state.status, onClick: this.toggle })
+        _react2.default.createElement(
+          "div",
+          null,
+          _react2.default.createElement(
+            "div",
+            { style: { "width": "50%", "float": "left" } },
+            _react2.default.createElement(_CardList2.default, { cards: this.state.cards, changeCard: this.changeCard, deleteCard: this.deleteCard })
+          ),
+          _react2.default.createElement(
+            "div",
+            { style: { "width": "50%", "float": "right" } },
+            _react2.default.createElement(_CardView2.default, { card: this.state.currentCard, status: this.state.status, onClick: this.toggle })
+          )
+        )
       );
     }
   }]);
@@ -28679,13 +28703,15 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // this is the main view that displays the current card
 var CardView = function CardView(props) {
   var style = {
-    "position": "absolute",
-    "width": "50%",
-    "height": "50%",
-    "left": "30%",
-    "top": "50%",
+    "position": "relative",
+    "width": "600px",
+    "height": "400px",
     "background": "blue",
-    "fontFamily": "Serif"
+    "fontFamily": "Serif",
+    "textAlign": "center",
+    "verticalAlign": "middle",
+    "display": "table-cell",
+    "wordWrap": "break-word"
   };
 
   var partial;
@@ -28694,7 +28720,6 @@ var CardView = function CardView(props) {
     partial = _react2.default.createElement(
       "h2",
       null,
-      "Question: ",
       props.card.question
     );
   } else if (props.status === 'init') {
@@ -28707,7 +28732,6 @@ var CardView = function CardView(props) {
     partial = _react2.default.createElement(
       "h2",
       null,
-      "Answer: ",
       props.card.answer
     );
   }
@@ -28777,18 +28801,31 @@ var _react2 = _interopRequireDefault(_react);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var CardListEntry = function CardListEntry(props) {
+	var style = {
+		"width": "75%",
+		"height": "100px",
+		"overflow": "hidden"
+	};
 	return _react2.default.createElement(
 		"div",
-		{ onClick: props.onClick.bind(undefined, props.card) },
+		null,
 		_react2.default.createElement(
-			"h4",
-			null,
-			props.card.question
+			"div",
+			{ style: style },
+			_react2.default.createElement(
+				"div",
+				{ onClick: props.onClick.bind(undefined, props.card) },
+				_react2.default.createElement(
+					"h4",
+					null,
+					props.card.question
+				)
+			)
 		),
 		_react2.default.createElement(
 			"button",
 			{ onClick: props.deleteCard.bind(undefined, props.card) },
-			"delete me"
+			"delete card"
 		)
 	);
 };
@@ -28833,8 +28870,8 @@ var Cardform = function (_React$Component) {
 		var _this = _possibleConstructorReturn(this, (Cardform.__proto__ || Object.getPrototypeOf(Cardform)).call(this, props));
 
 		_this.state = {
-			question: 'enter a question',
-			answer: 'enter an answer'
+			question: '',
+			answer: ''
 		};
 		_this.ChangeQ = _this.ChangeQ.bind(_this);
 		_this.ChangeA = _this.ChangeA.bind(_this);
@@ -28845,21 +28882,18 @@ var Cardform = function (_React$Component) {
 	_createClass(Cardform, [{
 		key: 'handleSubmit',
 		value: function handleSubmit(event) {
-			console.log('submitting form!');
 			event.preventDefault();
 			var data = {
 				question: this.state.question,
 				answer: this.state.answer
-			};
-
-			var sendCardToParent = this.props.getNewCard;
+				// getNewCard is passed from parent via props
+			};var sendCardToParent = this.props.getNewCard;
 
 			_jquery2.default.ajax({
 				type: "POST",
 				url: "http://localhost:3000/cards",
 				data: JSON.stringify(data),
 				success: function success(data) {
-					console.log('success: ', JSON.parse(data));
 					// send the card to the parent component where
 					// it will update the state of cards collection
 					sendCardToParent(JSON.parse(data));
@@ -28871,8 +28905,8 @@ var Cardform = function (_React$Component) {
 			});
 
 			this.setState({
-				question: 'enter a question',
-				answer: 'enter an answer'
+				question: '',
+				answer: ''
 			});
 		}
 	}, {
@@ -28894,13 +28928,13 @@ var Cardform = function (_React$Component) {
 		value: function render() {
 			return _react2.default.createElement(
 				'div',
-				null,
+				{ className: 'form-group' },
 				_react2.default.createElement(
 					'form',
-					{ onSubmit: this.handleSubmit },
-					_react2.default.createElement('input', { type: 'text', id: 'question', value: this.state.question, onChange: this.ChangeQ }),
-					_react2.default.createElement('input', { type: 'text', id: 'answer', value: this.state.answer, onChange: this.ChangeA }),
-					_react2.default.createElement('input', { type: 'submit' })
+					{ onSubmit: this.handleSubmit, className: 'form-inline' },
+					_react2.default.createElement('input', { type: 'text', className: 'form-control', placeholder: 'enter a question', value: this.state.question, onChange: this.ChangeQ }),
+					_react2.default.createElement('input', { type: 'text', className: 'form-control', placeholder: 'enter an answer', value: this.state.answer, onChange: this.ChangeA }),
+					_react2.default.createElement('input', { type: 'submit', className: 'btn btn-primary btn-md' })
 				)
 			);
 		}
