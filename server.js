@@ -22,7 +22,6 @@ app.use(webpackDevMiddleware(compiler, {
 }));
 
 app.get('/', (req, res) => {
-  console.log('hello');
   res.send('index.js');
 });
 
@@ -37,6 +36,12 @@ app.post('/cards', (req, res) => {
     }
   });
   res.status(201).send(JSON.stringify(c));
+});
+
+app.get('/cards', (req, res) => {
+  Card.find((err, result) => {
+    res.status(200).end(JSON.stringify(result));
+  });
 });
  
 const server = app.listen(3000, function() {
