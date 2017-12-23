@@ -11244,10 +11244,12 @@ var App = function (_React$Component) {
 
     _this.state = {
       cards: [],
-      currentCard: {}
+      currentCard: {},
+      status: 'init'
     };
     _this.getNewCard = _this.getNewCard.bind(_this);
     _this.changeCard = _this.changeCard.bind(_this);
+    _this.toggle = _this.toggle.bind(_this);
     return _this;
   }
 
@@ -11261,8 +11263,19 @@ var App = function (_React$Component) {
   }, {
     key: "changeCard",
     value: function changeCard(newCard) {
-      console.log('card: ', newCard);
-      this.setState({ currentCard: newCard });
+      this.setState({ currentCard: newCard, status: 'q' });
+    }
+  }, {
+    key: "toggle",
+    value: function toggle(e) {
+      // toggle question or answer on click of CardView
+      e.preventDefault();
+      // status determines whether question or answer is displayed on cardview.
+      if (this.state.status === 'q') {
+        this.setState({ status: 'a' });
+      } else if (this.state.status === 'a') {
+        this.setState({ status: 'q' });
+      }
     }
   }, {
     key: "componentWillMount",
@@ -11272,9 +11285,6 @@ var App = function (_React$Component) {
         type: "GET",
         url: "http://localhost:3000/cards",
         success: function success(data) {
-          // send the card to the parent component where
-          // it will update the state of cards collection
-          console.log(data);
           that.setState({ cards: data });
         },
         failure: function failure(err) {
@@ -11283,8 +11293,6 @@ var App = function (_React$Component) {
         dataType: 'json',
         contentType: "application/json"
       });
-
-      //this.setState({currentCard: this.state.cards[0]})
     }
   }, {
     key: "render",
@@ -11299,7 +11307,7 @@ var App = function (_React$Component) {
         ),
         _react2.default.createElement(_Cardform2.default, { getNewCard: this.getNewCard }),
         _react2.default.createElement(_CardList2.default, { cards: this.state.cards, changeCard: this.changeCard }),
-        _react2.default.createElement(_CardView2.default, { card: this.state.currentCard })
+        _react2.default.createElement(_CardView2.default, { card: this.state.currentCard, status: this.state.status, onClick: this.toggle })
       );
     }
   }]);
@@ -28636,28 +28644,44 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 // this is the main view that displays the current card
 var CardView = function CardView(props) {
+  var style = {
+    "position": "absolute",
+    "width": "50%",
+    "height": "50%",
+    "left": "30%",
+    "top": "50%",
+    "background": "blue",
+    "fontFamily": "Serif"
+  };
+
+  var partial;
+
+  if (props.status === 'q') {
+    partial = _react2.default.createElement(
+      "h2",
+      null,
+      "Question: ",
+      props.card.question
+    );
+  } else if (props.status === 'init') {
+    partial = _react2.default.createElement(
+      "h2",
+      null,
+      "Select a question"
+    );
+  } else {
+    partial = _react2.default.createElement(
+      "h2",
+      null,
+      "Answer: ",
+      props.card.answer
+    );
+  }
+
   return _react2.default.createElement(
-    'div',
-    null,
-    _react2.default.createElement(
-      'h1',
-      null,
-      ' CardView '
-    ),
-    _react2.default.createElement(
-      'h2',
-      null,
-      ' Question: ',
-      props.card.question,
-      ' '
-    ),
-    _react2.default.createElement(
-      'h3',
-      null,
-      ' Answer: ',
-      props.card.answer,
-      ' '
-    )
+    "div",
+    { style: style, onClick: props.onClick },
+    partial
   );
 };
 

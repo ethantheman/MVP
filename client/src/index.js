@@ -10,10 +10,12 @@ class App extends React.Component {
     super(props);
     this.state = {
       cards: [],
-      currentCard: {}
+      currentCard: {},
+      status: 'init'
     };
     this.getNewCard = this.getNewCard.bind(this);
     this.changeCard = this.changeCard.bind(this);
+    this.toggle = this.toggle.bind(this);
   }
 
   getNewCard(c) {
@@ -23,8 +25,18 @@ class App extends React.Component {
   }
 
   changeCard(newCard) {
-    console.log('card: ', newCard);
-    this.setState({currentCard: newCard});
+    this.setState({currentCard: newCard, status: 'q'});
+  }
+
+  toggle(e) {
+    // toggle question or answer on click of CardView
+    e.preventDefault();
+    // status determines whether question or answer is displayed on cardview.
+    if ( this.state.status === 'q' ) {
+      this.setState({status: 'a'});
+    } else if ( this.state.status === 'a' ) {
+      this.setState({status: 'q'});
+    }
   }
 
   componentWillMount() {
@@ -33,9 +45,6 @@ class App extends React.Component {
       type: "GET",
       url: "http://localhost:3000/cards",
       success: function(data){
-        // send the card to the parent component where
-        // it will update the state of cards collection
-        console.log(data);
         that.setState({cards: data});
       },
       failure: function(err) {
@@ -44,8 +53,6 @@ class App extends React.Component {
       dataType: 'json',
       contentType : "application/json"
     });
-
-    //this.setState({currentCard: this.state.cards[0]})
   }
 
   render() {
@@ -54,7 +61,7 @@ class App extends React.Component {
         <h1>Flashify</h1>
         <Cardform getNewCard={this.getNewCard} />
         <CardList cards={this.state.cards} changeCard={this.changeCard}/>
-        <CardView card={this.state.currentCard} />
+        <CardView card={this.state.currentCard} status={this.state.status} onClick={this.toggle}/>
       </div>
     );
   }
