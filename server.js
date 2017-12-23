@@ -7,6 +7,7 @@ const compiler = webpack(webpackConfig);
 const db = require('./database/index.js').db;
 const Card = require('./database/index.js').Card;
 const body_parser = require('body-parser');
+var $ = require('jquery');
 app.use(body_parser.json())
  
 app.use(express.static(__dirname + '/client/dist'));
@@ -38,6 +39,20 @@ app.post('/', (req, res) => {
   });
 });
 
+app.get('/jeopardy', (req, res) => {
+  $.ajax({
+      type: "GET",
+      url: "http://jservice.io/api/random",
+      headers: {
+        "Access-Control-Allow-Origin": "http://localhost:3000"
+      },
+      success: function(data) {
+        console.log('success: ', data);
+      },
+      contentType : "application/json"
+  });
+});
+
 app.post('/cards', (req, res) => {
   console.log('request: ', req.body);
   let c = new Card({question: req.body.question, answer: req.body.answer});
@@ -56,6 +71,10 @@ app.get('/cards', (req, res) => {
     res.status(200).end(JSON.stringify(result));
   });
 });
+
+app.get('*', (req, res) => {
+  res.status(404).send('resource not found :(');
+})
  
 const server = app.listen(3000, function() {
   const host = server.address().address;

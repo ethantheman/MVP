@@ -99,7 +99,7 @@ class App extends React.Component {
         <div style={{"textAlign": "center"}}>
           <p className="display-4" style={title}>Flashify</p>
           <div style={{"display": "inline-block"}}>
-            <Cardform getNewCard={this.getNewCard} />
+            <Cardform getNewCard={this.getNewCard}/>
           </div>
         </div>
         <div>

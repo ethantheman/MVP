@@ -28767,13 +28767,20 @@ var _CardListEntry2 = _interopRequireDefault(_CardListEntry);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var CardList = function CardList(props) {
+	var style = {
+		"border": "1px solid black",
+		"height": "400px",
+		"marginLeft": "5%",
+		"marginRight": "5%",
+		"overflow": "scroll"
+	};
 	return _react2.default.createElement(
 		"div",
-		null,
+		{ style: style },
 		_react2.default.createElement(
 			"h2",
-			null,
-			"Card List"
+			{ style: { "textAlign": "center" } },
+			"Your Cards"
 		),
 		props.cards.map(function (card, i) {
 			return _react2.default.createElement(_CardListEntry2.default, { key: i, card: card, onClick: props.changeCard, deleteCard: props.deleteCard });
@@ -28802,30 +28809,43 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var CardListEntry = function CardListEntry(props) {
 	var style = {
-		"width": "75%",
+		"width": "80%",
 		"height": "100px",
-		"overflow": "hidden"
+		"overflow": "hidden",
+		"border": "1px solid black",
+		"marginBottom": "2px",
+		"marginLeft": '5%',
+		"marginRight": '5%',
+		"textAlign": "center",
+		"verticalAlign": "middle"
+	};
+	var buttonStyle = {
+		"width": "25px",
+		"height": "25px",
+		"marginBottom": "2px",
+		"marginLeft": '5%',
+		"marginRight": '5%'
 	};
 	return _react2.default.createElement(
 		"div",
 		null,
 		_react2.default.createElement(
+			"button",
+			{ style: buttonStyle, onClick: props.deleteCard.bind(undefined, props.card) },
+			"x"
+		),
+		_react2.default.createElement(
 			"div",
-			{ style: style },
+			{ style: style, onClick: props.onClick.bind(undefined, props.card) },
 			_react2.default.createElement(
 				"div",
-				{ onClick: props.onClick.bind(undefined, props.card) },
+				null,
 				_react2.default.createElement(
 					"h4",
 					null,
 					props.card.question
 				)
 			)
-		),
-		_react2.default.createElement(
-			"button",
-			{ onClick: props.deleteCard.bind(undefined, props.card) },
-			"delete card"
 		)
 	);
 };
